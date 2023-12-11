@@ -1,23 +1,27 @@
-package `in`.kay.furture.screens
+package `in`.furniture.furnishar.screens
 
-import `in`.kay.furture.SharedViewModel
-import `in`.kay.furture.ui.theme.Typography
-import `in`.kay.furture.ui.theme.colorBlack
-import `in`.kay.furture.ui.theme.colorPurple
-import `in`.kay.furture.ui.theme.colorWhite
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -31,6 +35,11 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.layoutId
 import androidx.palette.graphics.Palette
+import `in`.furniture.furnishar.SharedViewModel
+import `in`.furniture.furnishar.ui.theme.Typography
+import `in`.furniture.furnishar.ui.theme.colorBlack
+import `in`.furniture.furnishar.ui.theme.colorPurple
+import `in`.furniture.furnishar.ui.theme.colorWhite
 import okhttp3.internal.toHexString
 
 @Composable
@@ -69,7 +78,7 @@ fun DetailScreen(viewModel: SharedViewModel) {
             modifier = Modifier.layoutId("tvFrom")
         )
         Text(
-            text = "$ ${furnitureModel.price.toString()}",
+            text = "₹ ${furnitureModel.price.toString()}",
             style = Typography.h1,
             fontSize = 24.sp,
             color = colorBlack,
@@ -106,7 +115,9 @@ fun DetailScreen(viewModel: SharedViewModel) {
                 color = Color(0XFF171717).copy(alpha = 0.2f),
             )
             Spacer(modifier = Modifier.height(64.dp))
+
             val bitmap = BitmapFactory.decodeResource(context.resources, furnitureModel.drawable)
+
             Palette.from(bitmap).generate { palette ->
                 kotlin.runCatching {
                     val hexColor = palette?.vibrantSwatch?.rgb?.toHexString()
@@ -195,5 +206,5 @@ fun constraintsDetail(): ConstraintSet {
 }
 
 fun getColor(colorString: String): Color {
-    return Color(android.graphics.Color.parseColor("#" + colorString))
+    return Color(android.graphics.Color.parseColor("#$colorString"))
 }

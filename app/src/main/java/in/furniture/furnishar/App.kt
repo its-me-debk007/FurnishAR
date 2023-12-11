@@ -1,4 +1,4 @@
-package `in`.kay.furture.utils
+package `in`.furniture.furnishar
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
@@ -7,10 +7,10 @@ import dagger.hilt.android.HiltAndroidApp
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        instance = this
+//        instance = this
     }
 
-    companion object {
-        lateinit var instance: App
-    }
+//    companion object {
+//        lateinit var instance: App
+//    }
 }

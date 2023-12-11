@@ -1,4 +1,4 @@
-package `in`.kay.furture.ui.theme
+package `in`.furniture.furnishar.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

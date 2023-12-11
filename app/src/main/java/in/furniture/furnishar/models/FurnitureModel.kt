@@ -1,4 +1,4 @@
-package `in`.kay.furture.models
+package `in`.furniture.furnishar.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

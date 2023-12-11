@@ -1,8 +1,7 @@
-package `in`.kay.furture.utils
+package `in`.furniture.furnishar.utils
 
-import `in`.kay.furture.R
-import `in`.kay.furture.models.FurnitureModel
-import kotlin.random.Random
+import `in`.furniture.furnishar.R
+import `in`.furniture.furnishar.models.FurnitureModel
 
 fun getCategories() = listOf(
     FurnitureModel("chair", R.drawable.ic_chair),
@@ -12,14 +11,27 @@ fun getCategories() = listOf(
     FurnitureModel("tables", R.drawable.ic_table),
 )
 
-fun getRecommended(): List<FurnitureModel>   {
-    val list = mutableListOf<FurnitureModel>()
-    list.add(getChairs()[(0 until getChairs().size).random()])
-    list.add(getOffices()[(0 until getOffices().size).random()])
-    list.add(getSofas()[(0 until getSofas().size).random()])
-    list.add(getHomeDecors()[(0 until getHomeDecors().size).random()])
-    list.add(getTables()[(0 until getTables().size).random()])
-    return list
+fun getRecommended(): List<FurnitureModel> {
+//    val list = mutableListOf<FurnitureModel>()
+//
+//    list.add(getChairs()[(0 until getChairs().size).random()])
+//    list.add(getOffices()[(0 until getOffices().size).random()])
+//    list.add(getSofas()[(0 until getSofas().size).random()])
+//    list.add(getHomeDecors()[(0 until getHomeDecors().size).random()])
+//    list.add(getTables()[(0 until getTables().size).random()])
+//
+//    return list
+
+    return List(5) {
+        FurnitureModel(
+            "Orange Sheen Chair",
+            R.drawable.chair_orange,
+            price = randomPrice(100, 200),
+            description = randomDescription("Orange Sheen Chair"),
+            link = "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/SheenChair/glTF/SheenChair.gltf",
+            type = "chair"
+        )
+    }
 }
 
 fun getChairs() = listOf(
