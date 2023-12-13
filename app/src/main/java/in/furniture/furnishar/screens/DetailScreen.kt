@@ -1,10 +1,13 @@
 package `in`.furniture.furnishar.screens
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,17 +21,17 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
@@ -37,18 +40,13 @@ import androidx.constraintlayout.compose.layoutId
 import androidx.palette.graphics.Palette
 import `in`.furniture.furnishar.SharedViewModel
 import `in`.furniture.furnishar.ui.theme.Typography
-import `in`.furniture.furnishar.ui.theme.colorBlack
-import `in`.furniture.furnishar.ui.theme.colorPurple
-import `in`.furniture.furnishar.ui.theme.colorWhite
 import okhttp3.internal.toHexString
 
 @Composable
 fun DetailScreen(viewModel: SharedViewModel) {
     val furnitureModel = viewModel.data
     val context = LocalContext.current
-    var btnColor by remember {
-        mutableStateOf(colorPurple)
-    }
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -67,7 +65,7 @@ fun DetailScreen(viewModel: SharedViewModel) {
             text = furnitureModel.name.toString().lowercase(),
             style = Typography.h1,
             fontSize = 32.sp,
-            color = colorBlack,
+            color = Color.Black,
             modifier = Modifier.layoutId("tvName")
         )
         Text(
@@ -81,7 +79,7 @@ fun DetailScreen(viewModel: SharedViewModel) {
             text = "₹ ${furnitureModel.price.toString()}",
             style = Typography.h1,
             fontSize = 24.sp,
-            color = colorBlack,
+            color = Color.Black,
             modifier = Modifier.layoutId("tvPrice")
         )
         Image(
@@ -95,9 +93,7 @@ fun DetailScreen(viewModel: SharedViewModel) {
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
-                .background(
-                    colorWhite
-                )
+                .background(Color.White)
                 .layoutId("clDetail")
                 .padding(24.dp, 160.dp, 24.dp, 24.dp)
         ) {
@@ -122,87 +118,146 @@ fun DetailScreen(viewModel: SharedViewModel) {
                 kotlin.runCatching {
                     val hexColor = palette?.vibrantSwatch?.rgb?.toHexString()
                     hexColor?.let {
-                        btnColor = getColor(hexColor)
+                        viewModel.btnColor = getColor(hexColor)
                     }
                 }.getOrElse {
                     val hexColor = palette?.darkMutedSwatch?.rgb?.toHexString()
                     hexColor?.let {
-                        btnColor = getColor(hexColor)
+                        viewModel.btnColor = getColor(hexColor)
                     }
                 }
 
             }
             Button(
                 onClick = {
-                    val sceneViewerIntent = Intent(Intent.ACTION_VIEW)
-                    val intentUri =
-                        Uri.parse("https://arvr.google.com/scene-viewer/1.0").buildUpon()
-                            .appendQueryParameter("file", "" + furnitureModel.link)
-                            .appendQueryParameter("mode", "ar_only")
-                            .appendQueryParameter("title", furnitureModel.name)
-                            .build()
-                    sceneViewerIntent.data = intentUri
-                    sceneViewerIntent.setPackage("com.google.ar.core")
-                    sceneViewerIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    context.startActivity(sceneViewerIntent)
+                    try {
+                        val sceneViewerIntent = Intent(Intent.ACTION_VIEW)
+                        val intentUri =
+                            Uri.parse("https://arvr.google.com/scene-viewer/1.0").buildUpon()
+                                .appendQueryParameter("file", "" + furnitureModel.link)
+                                .appendQueryParameter("mode", "ar_only")
+                                .appendQueryParameter("title", furnitureModel.name)
+                                .build()
+                        sceneViewerIntent.data = intentUri
+                        sceneViewerIntent.setPackage("com.google.ar.core")
+                        sceneViewerIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        context.startActivity(sceneViewerIntent)
+
+                    } catch (e: ActivityNotFoundException) {
+                        Log.d("furture", e.message.toString())
+                        viewModel.isARCoreNotInstalled = true
+                    }
                 },
-                colors = ButtonDefaults.buttonColors(backgroundColor = btnColor),
+                colors = ButtonDefaults.buttonColors(backgroundColor = viewModel.btnColor),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = "view into your house.",
                     style = Typography.body1,
                     fontSize = 18.sp,
-                    color = Color(0XFFFFFFFF).copy(alpha = 1f)
+                    color = Color.White
                 )
+            }
+        }
+    }
+
+    if (viewModel.isARCoreNotInstalled) {
+        ARCoreNotInstalledDialog(
+            onDismiss = { viewModel.isARCoreNotInstalled = false },
+            viewModel.btnColor
+        )
+    }
+}
+
+@Composable
+fun ARCoreNotInstalledDialog(
+    onDismiss: () -> Unit,
+    btnColor: Color,
+) {
+    Dialog(onDismissRequest = {}) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .background(Color.White, RoundedCornerShape(12.dp))
+                .padding(24.dp, 16.dp)) {
+            Text(
+                text = "ARCore not found!",
+                style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = Color.Black
+                )
+            )
+
+            Text(
+                text = "Your phone doesn't have ARCore installed. Kindly install for the AR Experience.",
+                style = TextStyle(
+                    fontSize = 15.sp,
+                    lineHeight = 20.sp,
+                    color = Color.DarkGray
+                ),
+                modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
+            )
+
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                Button(
+                    onClick = { onDismiss() },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = btnColor),
+                    elevation = ButtonDefaults.elevation(0.dp),
+                ) {
+                    Text(
+                        text = "OK",
+                        style = TextStyle(
+                            color = Color.White
+                        )
+                    )
+                }
             }
         }
     }
 }
 
-fun constraintsDetail(): ConstraintSet {
-    return ConstraintSet {
-        val tvType = createRefFor("tvType")
-        val tvName = createRefFor("tvName")
-        val tvFrom = createRefFor("tvFrom")
-        val tvPrice = createRefFor("tvPrice")
-        val ivImg = createRefFor("ivImg")
-        val clDetail = createRefFor("clDetail")
+fun constraintsDetail(): ConstraintSet = ConstraintSet {
+    val tvType = createRefFor("tvType")
+    val tvName = createRefFor("tvName")
+    val tvFrom = createRefFor("tvFrom")
+    val tvPrice = createRefFor("tvPrice")
+    val ivImg = createRefFor("ivImg")
+    val clDetail = createRefFor("clDetail")
 
-        constrain(tvType) {
-            top.linkTo(parent.top, 64.dp)
-            start.linkTo(parent.start, 24.dp)
-        }
-        constrain(tvName) {
-            top.linkTo(tvType.bottom, 4.dp)
-            start.linkTo(parent.start, 24.dp)
-        }
-        constrain(tvFrom) {
-            top.linkTo(tvName.bottom, 24.dp)
-            start.linkTo(parent.start, 24.dp)
-        }
-        constrain(tvPrice) {
-            top.linkTo(tvFrom.bottom, 4.dp)
-            start.linkTo(parent.start, 24.dp)
-        }
-        constrain(ivImg) {
-            top.linkTo(clDetail.top, 32.dp)
-            bottom.linkTo(clDetail.top, 32.dp)
-            start.linkTo(parent.start, 24.dp)
-            end.linkTo(parent.end, 24.dp)
-            width = Dimension.fillToConstraints
-        }
-        constrain(clDetail) {
-            top.linkTo(tvPrice.bottom, 80.dp)
-            bottom.linkTo(parent.bottom)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            width = Dimension.fillToConstraints
-            height = Dimension.fillToConstraints
-        }
-
-
+    constrain(tvType) {
+        top.linkTo(parent.top, 64.dp)
+        start.linkTo(parent.start, 24.dp)
     }
+    constrain(tvName) {
+        top.linkTo(tvType.bottom, 4.dp)
+        start.linkTo(parent.start, 24.dp)
+    }
+    constrain(tvFrom) {
+        top.linkTo(tvName.bottom, 24.dp)
+        start.linkTo(parent.start, 24.dp)
+    }
+    constrain(tvPrice) {
+        top.linkTo(tvFrom.bottom, 4.dp)
+        start.linkTo(parent.start, 24.dp)
+    }
+    constrain(ivImg) {
+        top.linkTo(clDetail.top, 32.dp)
+        bottom.linkTo(clDetail.top, 32.dp)
+        start.linkTo(parent.start, 24.dp)
+        end.linkTo(parent.end, 24.dp)
+        width = Dimension.fillToConstraints
+    }
+    constrain(clDetail) {
+        top.linkTo(tvPrice.bottom, 80.dp)
+        bottom.linkTo(parent.bottom)
+        start.linkTo(parent.start)
+        end.linkTo(parent.end)
+        width = Dimension.fillToConstraints
+        height = Dimension.fillToConstraints
+    }
+
+
 }
 
 fun getColor(colorString: String): Color {

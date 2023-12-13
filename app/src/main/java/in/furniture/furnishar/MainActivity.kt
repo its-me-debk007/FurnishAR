@@ -15,14 +15,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import `in`.furniture.furnishar.screens.DetailScreen
 import `in`.furniture.furnishar.screens.HomeScreen
 import `in`.furniture.furnishar.screens.SplashScreen
-import `in`.furniture.furnishar.ui.theme.FurtureTheme
+import `in`.furniture.furnishar.ui.theme.FurnishARTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            FurtureTheme {
+            FurnishARTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
