@@ -12,17 +12,14 @@ fun getCategories() = listOf(
 )
 
 fun getRecommended(): List<FurnitureModel> {
-//    val list = mutableListOf<FurnitureModel>()
-//
+
 //    list.add(getChairs()[(0 until getChairs().size).random()])
 //    list.add(getOffices()[(0 until getOffices().size).random()])
 //    list.add(getSofas()[(0 until getSofas().size).random()])
 //    list.add(getHomeDecors()[(0 until getHomeDecors().size).random()])
 //    list.add(getTables()[(0 until getTables().size).random()])
-//
-//    return list
 
-    return List(5) {
+    return listOf(
         FurnitureModel(
             "Orange Sheen Chair",
             R.drawable.chair_orange,
@@ -30,8 +27,40 @@ fun getRecommended(): List<FurnitureModel> {
             description = randomDescription("Orange Sheen Chair"),
             link = "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/SheenChair/glTF/SheenChair.gltf",
             type = "chair"
+        ),
+        FurnitureModel(
+            "Leather Sofa",
+            R.drawable.sofa2,
+            price = randomPrice(400, 1000),
+            description = randomDescription("Leather Sofa"),
+            type = "sofa",
+            link = "https://raw.githubusercontent.com/Sachinbhola/App-Templates/master/Resources/sofas/sofa_game_ready__2k_pbr/scene.gltf"
+        ),
+        FurnitureModel(
+            "Modern Pot",
+            R.drawable.dec1,
+            price = randomPrice(20, 50),
+            description = randomDescription("Modern Pot"),
+            type = "home decoration",
+            link = "https://raw.githubusercontent.com/Sachinbhola/App-Templates/master/Resources/decor/lavender_vase/scene.gltf"
+        ),
+        FurnitureModel(
+            "Gaming Chair",
+            R.drawable.office,
+            price = randomPrice(50, 80),
+            description = randomDescription("Gaming Chair"),
+            type = "office",
+            link = "https://raw.githubusercontent.com/Sachinbhola/App-Templates/master/Resources/office%20essentials%20and%20cabinets/gaming_chair_1-_black/scene.gltf"
+        ),
+        FurnitureModel(
+            "Table",
+            R.drawable.table1,
+            price = randomPrice(50, 80),
+            description = randomDescription("Table"),
+            type = "table",
+            link = "https://raw.githubusercontent.com/Sachinbhola/App-Templates/master/Resources/table/mahogany_table/scene.gltf"
         )
-    }
+    )
 }
 
 fun getChairs() = listOf(

@@ -42,6 +42,8 @@ import `in`.furniture.furnishar.R
 import `in`.furniture.furnishar.SharedViewModel
 import `in`.furniture.furnishar.models.FurnitureModel
 import `in`.furniture.furnishar.ui.theme.colorPurple
+import `in`.furniture.furnishar.utils.getCategories
+import `in`.furniture.furnishar.utils.getChairs
 import `in`.furniture.furnishar.utils.getSize
 
 @Composable
@@ -52,7 +54,7 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .background(color = Color.White)
-            .padding(top = 40.dp)
+            .padding(top = 40.dp, bottom = 32.dp)
     ) {
         Row(
             modifier = Modifier.padding(top = 8.dp, start = 24.dp),
@@ -77,24 +79,6 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
             )
         }
 
-//        Text(
-//            text = "browse by categories.",
-//            style = `in`.kay.furture.ui.theme.Typography.h1,
-//            fontSize = 18.sp,
-//            modifier = Modifier.padding(top = 32.dp, start = 24.dp)
-//        )
-//
-//        Spacer(modifier = Modifier.height(64.dp))
-//
-//        LazyRow(
-//            horizontalArrangement = Arrangement.spacedBy(16.dp),
-//            modifier = Modifier.padding(start = 24.dp, end = 24.dp)
-//        ) {
-//            itemsIndexed(getCategories()) { idx, category ->
-//                CategoryCard(index = idx, category = category)
-//            }
-//        }
-
         Text(
             text = "Recommended for you...",
             style = `in`.furniture.furnishar.ui.theme.Typography.h1,
@@ -108,40 +92,55 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.padding(start = 24.dp, end = 24.dp)
         ) {
-            itemsIndexed(viewModel.furnitureModels) { _, category ->
+            itemsIndexed(viewModel.furnitureModels) { idx, category ->
                 Cards(category = category) {
-                    viewModel.data = category
-                    navController.navigate("detail")
+                    if (idx == 0) {
+                        viewModel.data = category
+                        navController.navigate("detail")
+                    }
                 }
             }
         }
 
-//        Text(
-//            text = "chairs",
-//            style = `in`.kay.furture.ui.theme.Typography.h1,
-//            fontSize = 18.sp,
-//            modifier = Modifier.padding(top = 32.dp, start = 24.dp)
-//        )
-//
-//        Spacer(modifier = Modifier.height(24.dp))
-//
-//        LazyRow(
-//            horizontalArrangement = Arrangement.spacedBy(16.dp),
-//            modifier = Modifier.padding(start = 24.dp, end = 24.dp)
-//        ) {
-//            itemsIndexed(getChairs()) { idx, category ->
-//                Cards(
-//                    index = idx,
-//                    category = category,
-//                    navController = navController,
-//                    viewModel = viewModel
-//                )
-//            }
-//        }
+        Text(
+            text = "Browse by Categories",
+            style = `in`.furniture.furnishar.ui.theme.Typography.h1,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(top = 32.dp, start = 24.dp)
+        )
+
+        Spacer(modifier = Modifier.height(64.dp))
+
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(start = 24.dp, end = 24.dp)
+        ) {
+            itemsIndexed(getCategories()) { idx, category ->
+                CategoryCard(index = idx, category = category)
+            }
+        }
+
+        Text(
+            text = "Chairs",
+            style = `in`.furniture.furnishar.ui.theme.Typography.h1,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(top = 32.dp, start = 24.dp)
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(start = 24.dp, end = 24.dp)
+        ) {
+            itemsIndexed(getChairs()) { _, category ->
+                Cards(category = category) {}
+            }
+        }
 
 //        Text(
 //            text = "sofas",
-//            style = `in`.kay.furture.ui.theme.Typography.h1,
+//            style = `in`.furniture.furnishar.ui.theme.Typography.h1,
 //            fontSize = 18.sp,
 //            modifier = Modifier.padding(top = 32.dp, start = 24.dp)
 //        )
@@ -152,19 +151,14 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
 //            horizontalArrangement = Arrangement.spacedBy(16.dp),
 //            modifier = Modifier.padding(start = 24.dp, end = 24.dp)
 //        ) {
-//            itemsIndexed(getSofas()) { idx, category ->
-//                Cards(
-//                    index = idx,
-//                    category = category,
-//                    navController = navController,
-//                    viewModel = viewModel
-//                )
+//            itemsIndexed(getSofas()) { _, category ->
+//                Cards(category = category) {}
 //            }
 //        }
 //
 //        Text(
 //            text = "home decors",
-//            style = `in`.kay.furture.ui.theme.Typography.h1,
+//            style = `in`.furniture.furnishar.ui.theme.Typography.h1,
 //            fontSize = 18.sp,
 //            modifier = Modifier.padding(top = 32.dp, start = 24.dp)
 //        )
@@ -176,14 +170,10 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
 //            modifier = Modifier.padding(start = 24.dp, end = 24.dp)
 //        ) {
 //            itemsIndexed(getHomeDecors()) { idx, category ->
-//                Cards(
-//                    index = idx,
-//                    category = category,
-//                    navController = navController,
-//                    viewModel = viewModel
-//                )
+//                Cards(category = category) {}
 //            }
 //        }
+//
 //        Text(
 //            text = "office furniture",
 //            style = `in`.kay.furture.ui.theme.Typography.h1,
@@ -268,6 +258,12 @@ fun Cards(
 
 @Composable
 fun CategoryCard(category: FurnitureModel, index: Int) {
+    val padding: Dp = when {
+        category.name.equals("home decor") -> 40.dp
+        category.name.equals("office") -> 48.dp
+        else -> 32.dp
+    }
+
     ConstraintLayout(
         modifier = Modifier
             .height(200.dp)
@@ -281,12 +277,7 @@ fun CategoryCard(category: FurnitureModel, index: Int) {
                 .fillMaxSize()
                 .layoutId("ic_back")
         )
-        var padding: Dp = 32.dp
-        if (category.name.equals("home decor")) {
-            padding = 40.dp
-        } else if (category.name.equals("office")) {
-            padding = 48.dp
-        }
+
         Image(
             painter = painterResource(id = category.drawable),
             contentDescription = null,
@@ -296,13 +287,15 @@ fun CategoryCard(category: FurnitureModel, index: Int) {
                 .padding(bottom = padding),
             alignment = Alignment.TopCenter
         )
+
         Text(
-            text = category.name ?: "null",
+            text = category.name.toString(),
             style = `in`.furniture.furnishar.ui.theme.Typography.h1,
             fontSize = 16.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier.layoutId("tv_name")
         )
+
         Text(
             text = (getSize(index) - 1).toString() + "+ products",
             style = `in`.furniture.furnishar.ui.theme.Typography.h1,

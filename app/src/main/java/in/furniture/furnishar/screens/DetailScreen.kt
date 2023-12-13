@@ -9,6 +9,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,11 +41,11 @@ import androidx.constraintlayout.compose.layoutId
 import androidx.palette.graphics.Palette
 import `in`.furniture.furnishar.SharedViewModel
 import `in`.furniture.furnishar.ui.theme.Typography
+import `in`.furniture.furnishar.ui.theme.WarningBackgroundColor
 import okhttp3.internal.toHexString
 
 @Composable
 fun DetailScreen(viewModel: SharedViewModel) {
-    val furnitureModel = viewModel.data
     val context = LocalContext.current
 
     ConstraintLayout(
@@ -55,14 +56,14 @@ fun DetailScreen(viewModel: SharedViewModel) {
         constraintSet = constraintsDetail()
     ) {
         Text(
-            text = furnitureModel.type.toString(),
+            text = viewModel.data.type.toString(),
             style = Typography.body1,
             fontSize = 18.sp,
             color = Color(0XFF171717).copy(alpha = 0.4f),
             modifier = Modifier.layoutId("tvType")
         )
         Text(
-            text = furnitureModel.name.toString().lowercase(),
+            text = viewModel.data.name.toString().lowercase(),
             style = Typography.h1,
             fontSize = 32.sp,
             color = Color.Black,
@@ -76,14 +77,14 @@ fun DetailScreen(viewModel: SharedViewModel) {
             modifier = Modifier.layoutId("tvFrom")
         )
         Text(
-            text = "₹ ${furnitureModel.price.toString()}",
+            text = "₹ ${viewModel.data.price.toString()}",
             style = Typography.h1,
             fontSize = 24.sp,
             color = Color.Black,
             modifier = Modifier.layoutId("tvPrice")
         )
         Image(
-            painter = painterResource(id = furnitureModel.drawable),
+            painter = painterResource(id = viewModel.data.drawable),
             contentDescription = "",
             modifier = Modifier
                 .height(240.dp)
@@ -98,21 +99,24 @@ fun DetailScreen(viewModel: SharedViewModel) {
                 .padding(24.dp, 160.dp, 24.dp, 24.dp)
         ) {
             Text(
-                text = furnitureModel.name.toString(),
+                text = viewModel.data.name.toString(),
                 style = Typography.h1,
                 fontSize = 18.sp,
                 color = Color(0XFF171717).copy(alpha = 1f)
             )
+
             Spacer(modifier = Modifier.height(32.dp))
+
             Text(
-                text = furnitureModel.description.toString().lowercase(),
+                text = viewModel.data.description.toString().lowercase(),
                 style = Typography.body2,
                 fontSize = 16.sp,
-                color = Color(0XFF171717).copy(alpha = 0.2f),
+                color = Color(0XFF171717).copy(alpha = 0.5f),
             )
-            Spacer(modifier = Modifier.height(64.dp))
 
-            val bitmap = BitmapFactory.decodeResource(context.resources, furnitureModel.drawable)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            val bitmap = BitmapFactory.decodeResource(context.resources, viewModel.data.drawable)
 
             Palette.from(bitmap).generate { palette ->
                 kotlin.runCatching {
@@ -128,15 +132,27 @@ fun DetailScreen(viewModel: SharedViewModel) {
                 }
 
             }
+
+            Text(
+                text = "Ensure a well-lit environment and a large surface to render the AR Model!",
+                style = Typography.body2,
+                fontSize = 14.sp,
+                color = Color(0XFF171717).copy(alpha = 0.5f),
+                modifier = Modifier
+                    .padding(bottom = 24.dp)
+                    .background(WarningBackgroundColor, RoundedCornerShape(8.dp))
+                    .padding(12.dp)
+            )
+
             Button(
                 onClick = {
                     try {
                         val sceneViewerIntent = Intent(Intent.ACTION_VIEW)
                         val intentUri =
                             Uri.parse("https://arvr.google.com/scene-viewer/1.0").buildUpon()
-                                .appendQueryParameter("file", "" + furnitureModel.link)
+                                .appendQueryParameter("file", "" + viewModel.data.link)
                                 .appendQueryParameter("mode", "ar_only")
-                                .appendQueryParameter("title", furnitureModel.name)
+                                .appendQueryParameter("title", viewModel.data.name)
                                 .build()
                         sceneViewerIntent.data = intentUri
                         sceneViewerIntent.setPackage("com.google.ar.core")
@@ -149,10 +165,12 @@ fun DetailScreen(viewModel: SharedViewModel) {
                     }
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = viewModel.btnColor),
+                elevation = ButtonDefaults.elevation(0.dp),
+                contentPadding = PaddingValues(vertical = 12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "view into your house.",
+                    text = "View in your House!",
                     style = Typography.body1,
                     fontSize = 18.sp,
                     color = Color.White
@@ -179,7 +197,8 @@ fun ARCoreNotInstalledDialog(
             Modifier
                 .fillMaxWidth()
                 .background(Color.White, RoundedCornerShape(12.dp))
-                .padding(24.dp, 16.dp)) {
+                .padding(24.dp, 16.dp)
+        ) {
             Text(
                 text = "ARCore not found!",
                 style = TextStyle(
