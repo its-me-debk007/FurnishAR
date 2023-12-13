@@ -25,17 +25,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import `in`.furniture.furnishar.ui.theme.colorPurple
-import `in`.furniture.furnishar.ui.theme.colorWhite
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavHostController) {
-    val context = LocalContext.current
     val slow = 700
     val fast = 300
     var isAnimStart by remember {
@@ -46,6 +44,7 @@ fun SplashScreen(navController: NavHostController) {
         delay(500L)
         isAnimStart = true
         delay(1200L)
+        navController.popBackStack()
         navController.navigate("home")
     })
 
@@ -59,7 +58,7 @@ fun SplashScreen(navController: NavHostController) {
         Icon(
             imageVector = Icons.Outlined.ShoppingCart,
             contentDescription = "null",
-            tint = colorWhite,
+            tint = Color.White,
             modifier = Modifier.size(32.dp)
         )
         AnimatedVisibility(
@@ -89,18 +88,18 @@ fun SplashScreen(navController: NavHostController) {
             Row(modifier = Modifier.padding(start = 4.dp)) {
                 Text(
                     text = "Fur",
-                    color = colorWhite,
+                    color = Color.White,
                     modifier = Modifier.padding(start = 0.dp),
                     style = `in`.furniture.furnishar.ui.theme.Typography.h1
                 )
                 Text(
                     text = "nish",
-                    color = colorWhite,
+                    color = Color.White,
                     style = `in`.furniture.furnishar.ui.theme.Typography.h1
                 )
                 Text(
                     text = "AR",
-                    color = colorWhite,
+                    color = Color.White,
                     fontWeight = FontWeight.Bold,
                     style = `in`.furniture.furnishar.ui.theme.Typography.h1
                 )

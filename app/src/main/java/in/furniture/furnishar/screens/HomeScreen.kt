@@ -42,7 +42,6 @@ import `in`.furniture.furnishar.R
 import `in`.furniture.furnishar.SharedViewModel
 import `in`.furniture.furnishar.models.FurnitureModel
 import `in`.furniture.furnishar.ui.theme.colorPurple
-import `in`.furniture.furnishar.ui.theme.colorWhite
 import `in`.furniture.furnishar.utils.getSize
 
 @Composable
@@ -52,7 +51,7 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .background(color = colorWhite)
+            .background(color = Color.White)
             .padding(top = 40.dp)
     ) {
         Row(
@@ -109,8 +108,8 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.padding(start = 24.dp, end = 24.dp)
         ) {
-            itemsIndexed(viewModel.furnitureModels) { idx, category ->
-                Cards(index = idx, category = category, navController, viewModel) {
+            itemsIndexed(viewModel.furnitureModels) { _, category ->
+                Cards(category = category) {
                     viewModel.data = category
                     navController.navigate("detail")
                 }
@@ -230,10 +229,7 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
 
 @Composable
 fun Cards(
-    index: Int,
     category: FurnitureModel,
-    navController: NavHostController,
-    viewModel: SharedViewModel,
     onClick: () -> Unit
 ) {
     Column(
