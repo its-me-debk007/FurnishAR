@@ -26,12 +26,12 @@ class SharedViewModel @Inject constructor() : ViewModel() {
     var btnColor by mutableStateOf(ColorPrimary)
 
     var sections = listOf(
-        "Recommended for you..." to getRecommended(),
-        "Browse by Categories" to getCategories(),
-        "Chairs" to getChairs(),
-        "Sofas" to getSofas(),
-        "Home decors" to getHomeDecors(),
-        "Office furniture" to getOfficeFurnitures(),
-        "Tables" to getTables()
+        "Recommended for you..." to getRecommended().shuffled(),
+        "Browse by Categories" to getCategories().shuffled(),
+        "Chairs" to getChairs().shuffled(),
+        "Sofas" to getSofas().shuffled(),
+        "Home decors" to getHomeDecors().shuffled(),
+        "Office furniture" to getOfficeFurnitures().shuffled(),
+        "Tables" to getTables().shuffled()
     )
 }
