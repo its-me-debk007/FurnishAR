@@ -2,8 +2,6 @@ package `in`.furniture.furnishar.screens
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
@@ -16,19 +14,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,67 +38,41 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.layoutId
-import androidx.palette.graphics.Palette
-import coil.ImageLoader
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import coil.request.SuccessResult
 import `in`.furniture.furnishar.SharedViewModel
 import `in`.furniture.furnishar.ui.theme.Typography
 import `in`.furniture.furnishar.ui.theme.WarningBackgroundColor
-import okhttp3.internal.toHexString
 
 @Composable
 fun DetailScreen(viewModel: SharedViewModel) {
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        val loader = ImageLoader(context)
-        val request = ImageRequest.Builder(context)
-            .data(viewModel.data.imageUrl)
-            .allowHardware(false)
-            .build()
-        val result = loader.execute(request)
-
-        val bitmap: Bitmap? = if (result is SuccessResult) {
-            (result.drawable as BitmapDrawable).bitmap
-        } else null
-
-        bitmap?.let {
-            Palette.from(it).generate { palette ->
-                kotlin.runCatching {
-                    val hexColor = palette?.vibrantSwatch?.rgb?.toHexString()
-                    hexColor?.let {
-                        viewModel.btnColor = getColor(hexColor)
-                    }
-                }.getOrElse {
-                    val hexColor = palette?.darkMutedSwatch?.rgb?.toHexString()
-                    hexColor?.let {
-                        viewModel.btnColor = getColor(hexColor)
-                    }
-                }
-            }
-        }
-    }
-
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .background(color = Color(0XFFF3F6F8)),
+            .background(
+                brush = Brush.verticalGradient(
+                    listOf(
+                        Color(0XFFF3F6F8),
+                        Color.Transparent
+                    )
+                )
+            ),
         constraintSet = constraintsDetail()
     ) {
         Text(
             text = viewModel.data.type.toString(),
             style = Typography.body1,
+            fontStyle = FontStyle.Italic,
             fontSize = 18.sp,
             color = Color(0XFF171717).copy(alpha = 0.4f),
             modifier = Modifier.layoutId("tvType")
         )
         Text(
-            text = viewModel.data.name.toString().lowercase(),
+            text = viewModel.data.name.toString(),
             style = Typography.h1,
-            fontSize = 32.sp,
+            fontSize = 30.sp,
             color = Color.Black,
             modifier = Modifier.layoutId("tvName")
         )
@@ -112,7 +86,7 @@ fun DetailScreen(viewModel: SharedViewModel) {
         Text(
             text = "₹ ${viewModel.data.price.toString()}",
             style = Typography.h1,
-            fontSize = 24.sp,
+            fontSize = 22.sp,
             color = Color.Black,
             modifier = Modifier.layoutId("tvPrice")
         )
@@ -132,16 +106,16 @@ fun DetailScreen(viewModel: SharedViewModel) {
                 .padding(24.dp, 160.dp, 24.dp, 24.dp)
         ) {
             Text(
-                text = viewModel.data.name.toString(),
+                text = "Description",
                 style = Typography.h1,
                 fontSize = 18.sp,
-                color = Color(0XFF171717).copy(alpha = 1f)
+                color = Color(0XFF171717)
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = viewModel.data.description.toString().lowercase(),
+                text = viewModel.data.description.toString(),
                 style = Typography.body2,
                 fontSize = 16.sp,
                 color = Color(0XFF171717).copy(alpha = 0.5f),
@@ -151,12 +125,12 @@ fun DetailScreen(viewModel: SharedViewModel) {
 
             Text(
                 text = "Ensure a well-lit environment and a large surface to render the AR Model!",
-                style = Typography.body2,
-                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                fontSize = 15.sp,
                 color = Color(0XFF171717).copy(alpha = 0.5f),
                 modifier = Modifier
                     .padding(bottom = 24.dp)
-                    .background(WarningBackgroundColor, RoundedCornerShape(8.dp))
+                    .background(WarningBackgroundColor, RoundedCornerShape(2.dp))
                     .padding(12.dp)
             )
 
@@ -182,13 +156,15 @@ fun DetailScreen(viewModel: SharedViewModel) {
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = viewModel.btnColor),
                 elevation = ButtonDefaults.elevation(0.dp),
+                shape = CircleShape,
                 contentPadding = PaddingValues(vertical = 12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = "View in your House!",
-                    style = Typography.body1,
                     fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                    letterSpacing = 0.7.sp,
                     color = Color.White
                 )
             }
@@ -277,24 +253,18 @@ fun constraintsDetail(): ConstraintSet = ConstraintSet {
         start.linkTo(parent.start, 24.dp)
     }
     constrain(ivImg) {
-        top.linkTo(clDetail.top, 32.dp)
-        bottom.linkTo(clDetail.top, 32.dp)
+        top.linkTo(tvPrice.bottom, 8.dp)
         start.linkTo(parent.start, 24.dp)
         end.linkTo(parent.end, 24.dp)
         width = Dimension.fillToConstraints
     }
     constrain(clDetail) {
-        top.linkTo(tvPrice.bottom, 80.dp)
-        bottom.linkTo(parent.bottom)
+        top.linkTo(tvPrice.bottom, 90.dp)
+        bottom.linkTo(parent.bottom, 24.dp)
         start.linkTo(parent.start)
         end.linkTo(parent.end)
         width = Dimension.fillToConstraints
         height = Dimension.fillToConstraints
     }
 
-
-}
-
-fun getColor(colorString: String): Color {
-    return Color(android.graphics.Color.parseColor("#$colorString"))
 }
