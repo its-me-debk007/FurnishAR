@@ -12,9 +12,9 @@ android {
     defaultConfig {
         applicationId "in.furniture.furnishar"
         minSdk 21
-        targetSdk 32
-        versionCode 1
-        versionName "0.0.9"
+        targetSdk 33
+        versionCode 10
+        versionName "0.0.10"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -40,7 +40,7 @@ android {
         buildConfig true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.5.5"
+        kotlinCompilerExtensionVersion "1.5.11"
     }
     packagingOptions {
         resources {
@@ -57,15 +57,15 @@ dependencies {
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.constraintlayout:constraintlayout-compose:$constraint_layout"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
-    implementation 'androidx.activity:activity-compose:1.8.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.activity:activity-compose:1.8.2'
     // Coil
     implementation("io.coil-kt:coil-compose:$coil_version")
     //Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     // dagger -hilt
-    implementation "androidx.hilt:hilt-navigation-compose:1.1.0"
+    implementation "androidx.hilt:hilt-navigation-compose:1.2.0"
     implementation "com.google.dagger:hilt-android:$dagger_version"
     ksp "com.google.dagger:hilt-compiler:$dagger_version"
     // compose navigation
