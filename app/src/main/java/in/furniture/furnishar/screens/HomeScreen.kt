@@ -78,7 +78,7 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
 
         LazyColumn(
             contentPadding = PaddingValues(
-                top = it.calculateTopPadding(),
+                top = it.calculateTopPadding() + 16.dp,
                 bottom = 24.dp
             )
         ) {
@@ -87,14 +87,14 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
                     Text(
                         text = viewModel.sections[it].first,
                         style = `in`.furniture.furnishar.ui.theme.Typography.h1,
-                        fontSize = 18.sp,
+                        fontSize = 19.sp,
                         modifier = Modifier.padding(start = 24.dp)
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(24.dp),
                         contentPadding = PaddingValues(horizontal = 24.dp)
                     ) {
                         itemsIndexed(viewModel.sections[it].second) { _, category ->
@@ -105,7 +105,7 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
                 }
             }
         }
