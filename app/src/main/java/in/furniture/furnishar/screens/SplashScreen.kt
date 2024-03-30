@@ -59,7 +59,7 @@ fun SplashScreen(navController: NavHostController) {
             imageVector = Icons.Outlined.ShoppingCart,
             contentDescription = "null",
             tint = Color.White,
-            modifier = Modifier.size(32.dp)
+            modifier = Modifier.size(40.dp)
         )
         AnimatedVisibility(
             visible = isAnimStart,
