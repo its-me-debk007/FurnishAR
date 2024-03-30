@@ -166,8 +166,8 @@ fun DetailScreen(viewModel: SharedViewModel) {
                         val sceneViewerIntent = Intent(Intent.ACTION_VIEW)
                         val intentUri =
                             Uri.parse("https://arvr.google.com/scene-viewer/1.0").buildUpon()
-                                .appendQueryParameter("file", "" + viewModel.data.link)
-                                .appendQueryParameter("mode", "ar_only")
+                                .appendQueryParameter("file", viewModel.data.link.toString())
+//                                .appendQueryParameter("mode", "ar_only")
                                 .appendQueryParameter("title", viewModel.data.name)
                                 .build()
                         sceneViewerIntent.data = intentUri
