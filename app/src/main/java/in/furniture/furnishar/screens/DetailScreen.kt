@@ -161,7 +161,7 @@ fun DetailScreen(viewModel: SharedViewModel) {
 
                     } catch (e: ActivityNotFoundException) {
                         Log.d("furture", e.message.toString())
-                        viewModel.isARCoreNotInstalled = true
+                        viewModel.isARCoreDisabled = true
                     }
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = viewModel.btnColor),
@@ -179,9 +179,9 @@ fun DetailScreen(viewModel: SharedViewModel) {
         }
     }
 
-    if (viewModel.isARCoreNotInstalled) {
+    if (viewModel.isARCoreDisabled) {
         ARCoreNotInstalledDialog(
-            onDismiss = { viewModel.isARCoreNotInstalled = false },
+            onDismiss = { viewModel.isARCoreDisabled = false },
             viewModel.btnColor
         )
     }

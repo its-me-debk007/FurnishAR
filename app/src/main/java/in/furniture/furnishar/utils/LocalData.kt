@@ -184,7 +184,7 @@ fun getHomeDecors() = listOf(
     )
 )
 
-fun getOffices() = listOf(
+fun getOfficeFurnitures() = listOf(
     FurnitureModel(
         "Gaming Chair",
         R.drawable.office,
@@ -251,7 +251,7 @@ fun getSize(idx: Int): Int {
         0 -> getChairs().size
         1 -> getSofas().size
         2 -> getHomeDecors().size
-        3 -> getOffices().size
+        3 -> getOfficeFurnitures().size
         4 -> getTables().size
         else -> 0
     }

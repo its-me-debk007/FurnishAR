@@ -29,7 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import `in`.furniture.furnishar.ui.theme.colorPurple
+import `in`.furniture.furnishar.ui.theme.ColorPrimary
 import kotlinx.coroutines.delay
 
 @Composable
@@ -51,7 +51,7 @@ fun SplashScreen(navController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorPurple),
+            .background(ColorPrimary),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {

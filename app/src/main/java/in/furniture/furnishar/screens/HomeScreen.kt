@@ -5,20 +5,22 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.runtime.Composable
@@ -27,9 +29,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,184 +45,89 @@ import androidx.navigation.NavHostController
 import `in`.furniture.furnishar.R
 import `in`.furniture.furnishar.SharedViewModel
 import `in`.furniture.furnishar.models.FurnitureModel
-import `in`.furniture.furnishar.ui.theme.colorPurple
-import `in`.furniture.furnishar.utils.getCategories
-import `in`.furniture.furnishar.utils.getChairs
+import `in`.furniture.furnishar.ui.theme.ColorPrimary
 import `in`.furniture.furnishar.utils.getSize
 
 @Composable
 fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .background(color = Color.White)
-            .padding(top = 40.dp, bottom = 32.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(top = 8.dp, start = 24.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.ShoppingCart,
-                contentDescription = "null",
-                tint = colorPurple,
-                modifier = Modifier.size(32.dp)
-            )
-            Text(
-                text = "Furnish",
-                modifier = Modifier.padding(start = 8.dp),
-                style = `in`.furniture.furnishar.ui.theme.Typography.h1,
-            )
-            Text(
-                text = "AR",
-                color = colorPurple,
-                fontWeight = FontWeight.Bold,
-                style = `in`.furniture.furnishar.ui.theme.Typography.h1
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = buildAnnotatedString {
+                            append("Furnish")
+                            withStyle(SpanStyle(color = ColorPrimary)) {
+                                append("AR")
+                            }
+                        },
+                        style = `in`.furniture.furnishar.ui.theme.Typography.h1,
+                        modifier = Modifier.offset(x = (-10).dp)
+                    )
+                },
+                navigationIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.ShoppingCart,
+                        contentDescription = null,
+                        tint = ColorPrimary,
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                            .size(32.dp)
+                    )
+                },
+                elevation = 0.dp,
+                modifier = Modifier.padding(top = 40.dp, bottom = 8.dp)
             )
         }
+    ) {
 
-        Text(
-            text = "Recommended for you...",
-            style = `in`.furniture.furnishar.ui.theme.Typography.h1,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(top = 32.dp, start = 24.dp, end = 24.dp)
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(start = 24.dp, end = 24.dp)
+        LazyColumn(
+            contentPadding = PaddingValues(
+                start = 24.dp,
+                top = it.calculateTopPadding(),
+                bottom = 24.dp
+            )
         ) {
-            itemsIndexed(viewModel.furnitureModels) { idx, category ->
-                Cards(category = category) {
-                    if (idx == 0) {
-                        viewModel.data = category
-                        navController.navigate("detail")
+            items(viewModel.sections.size) {
+                Column {
+                    Text(
+                        text = viewModel.sections[it].first,
+                        style = `in`.furniture.furnishar.ui.theme.Typography.h1,
+                        fontSize = 18.sp,
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        if (it == 1) {
+                            itemsIndexed(viewModel.sections[it].second) { idx, category ->
+                                CategoryItem(index = idx, category = category)
+                            }
+
+                            return@LazyRow
+                        }
+
+                        itemsIndexed(viewModel.sections[it].second) { _, category ->
+                            FurnitureItem(category = category) {
+                                viewModel.data = category
+                                navController.navigate("detail")
+                            }
+                        }
                     }
+
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
 
-        Text(
-            text = "Browse by Categories",
-            style = `in`.furniture.furnishar.ui.theme.Typography.h1,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(top = 32.dp, start = 24.dp)
-        )
-
-        Spacer(modifier = Modifier.height(64.dp))
-
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(start = 24.dp, end = 24.dp)
-        ) {
-            itemsIndexed(getCategories()) { idx, category ->
-                CategoryCard(index = idx, category = category)
-            }
-        }
-
-        Text(
-            text = "Chairs",
-            style = `in`.furniture.furnishar.ui.theme.Typography.h1,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(top = 32.dp, start = 24.dp)
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(start = 24.dp, end = 24.dp)
-        ) {
-            itemsIndexed(getChairs()) { _, category ->
-                Cards(category = category) {}
-            }
-        }
-
-//        Text(
-//            text = "sofas",
-//            style = `in`.furniture.furnishar.ui.theme.Typography.h1,
-//            fontSize = 18.sp,
-//            modifier = Modifier.padding(top = 32.dp, start = 24.dp)
-//        )
-//
-//        Spacer(modifier = Modifier.height(24.dp))
-//
-//        LazyRow(
-//            horizontalArrangement = Arrangement.spacedBy(16.dp),
-//            modifier = Modifier.padding(start = 24.dp, end = 24.dp)
-//        ) {
-//            itemsIndexed(getSofas()) { _, category ->
-//                Cards(category = category) {}
-//            }
-//        }
-//
-//        Text(
-//            text = "home decors",
-//            style = `in`.furniture.furnishar.ui.theme.Typography.h1,
-//            fontSize = 18.sp,
-//            modifier = Modifier.padding(top = 32.dp, start = 24.dp)
-//        )
-//
-//        Spacer(modifier = Modifier.height(24.dp))
-//
-//        LazyRow(
-//            horizontalArrangement = Arrangement.spacedBy(16.dp),
-//            modifier = Modifier.padding(start = 24.dp, end = 24.dp)
-//        ) {
-//            itemsIndexed(getHomeDecors()) { idx, category ->
-//                Cards(category = category) {}
-//            }
-//        }
-//
-//        Text(
-//            text = "office furniture",
-//            style = `in`.kay.furture.ui.theme.Typography.h1,
-//            fontSize = 18.sp,
-//            modifier = Modifier.padding(top = 32.dp, start = 24.dp)
-//        )
-//        Spacer(modifier = Modifier.height(24.dp))
-//        LazyRow(
-//            horizontalArrangement = Arrangement.spacedBy(16.dp),
-//            modifier = Modifier.padding(start = 24.dp, end = 24.dp)
-//        ) {
-//            itemsIndexed(getOffices()) { idx, category ->
-//                Cards(
-//                    index = idx,
-//                    category = category,
-//                    navController = navController,
-//                    viewModel = viewModel
-//                )
-//            }
-//        }
-//        Text(
-//            text = "tables",
-//            style = `in`.kay.furture.ui.theme.Typography.h1,
-//            fontSize = 18.sp,
-//            modifier = Modifier.padding(top = 32.dp, start = 24.dp)
-//        )
-//        Spacer(modifier = Modifier.height(24.dp))
-//        LazyRow(
-//            horizontalArrangement = Arrangement.spacedBy(16.dp),
-//            modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 16.dp)
-//        ) {
-//            itemsIndexed(getTables()) { idx, category ->
-//                Cards(
-//                    index = idx,
-//                    category = category,
-//                    navController = navController,
-//                    viewModel = viewModel
-//                )
-//            }
-//        }
     }
 }
 
 @Composable
-fun Cards(
+fun FurnitureItem(
     category: FurnitureModel,
     onClick: () -> Unit
 ) {
@@ -257,7 +166,7 @@ fun Cards(
 }
 
 @Composable
-fun CategoryCard(category: FurnitureModel, index: Int) {
+fun CategoryItem(category: FurnitureModel, index: Int) {
     val padding: Dp = when {
         category.name.equals("home decor") -> 40.dp
         category.name.equals("office") -> 48.dp
