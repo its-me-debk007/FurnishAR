@@ -13,8 +13,8 @@ android {
         applicationId "in.furniture.furnishar"
         minSdk 21
         targetSdk 33
-        versionCode 11
-        versionName "0.2.1"
+        versionCode 12
+        versionName "0.2.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

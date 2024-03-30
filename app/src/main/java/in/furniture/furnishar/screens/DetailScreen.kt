@@ -171,7 +171,7 @@ fun DetailScreen(viewModel: SharedViewModel) {
                                 .appendQueryParameter("title", viewModel.data.name)
                                 .build()
                         sceneViewerIntent.data = intentUri
-                        sceneViewerIntent.setPackage("com.google.ar.core")
+                        sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox")
                         sceneViewerIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         context.startActivity(sceneViewerIntent)
 
