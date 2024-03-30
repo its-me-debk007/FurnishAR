@@ -1,14 +1,13 @@
 package `in`.furniture.furnishar.utils
 
-import `in`.furniture.furnishar.R
 import `in`.furniture.furnishar.models.FurnitureModel
 
 fun getCategories() = listOf(
-    FurnitureModel("chair", R.drawable.ic_chair),
-    FurnitureModel("sofa", R.drawable.ic_sofa),
-    FurnitureModel("home decor", R.drawable.ic_home_decor),
-    FurnitureModel("office", R.drawable.ic_office),
-    FurnitureModel("tables", R.drawable.ic_table),
+    FurnitureModel("chair", imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/ic_chair.png"),
+    FurnitureModel("sofa", imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/ic_sofa.png"),
+    FurnitureModel("home decor", imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/ic_home_decor.png"),
+    FurnitureModel("office", imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/ic_office.png"),
+    FurnitureModel("tables", imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/ic_table.png"),
 )
 
 fun getRecommended(): List<FurnitureModel> {
@@ -22,7 +21,7 @@ fun getRecommended(): List<FurnitureModel> {
     return listOf(
         FurnitureModel(
             "Orange Sheen Chair",
-            R.drawable.chair_orange,
+            imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/chair_orange.png",
             price = randomPrice(100, 200),
             description = randomDescription("Orange Sheen Chair"),
             link = "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/SheenChair/glTF/SheenChair.gltf",
@@ -30,7 +29,7 @@ fun getRecommended(): List<FurnitureModel> {
         ),
         FurnitureModel(
             "Leather Sofa",
-            R.drawable.sofa2,
+            imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/sofa2.png",
             price = randomPrice(400, 1000),
             description = randomDescription("Leather Sofa"),
             type = "sofa",
@@ -38,7 +37,7 @@ fun getRecommended(): List<FurnitureModel> {
         ),
         FurnitureModel(
             "Modern Pot",
-            R.drawable.dec1,
+            imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/dec1.png",
             price = randomPrice(20, 50),
             description = randomDescription("Modern Pot"),
             type = "home decoration",
@@ -46,7 +45,7 @@ fun getRecommended(): List<FurnitureModel> {
         ),
         FurnitureModel(
             "Gaming Chair",
-            R.drawable.office,
+            imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/office.png",
             price = randomPrice(50, 80),
             description = randomDescription("Gaming Chair"),
             type = "office",
@@ -54,7 +53,7 @@ fun getRecommended(): List<FurnitureModel> {
         ),
         FurnitureModel(
             "Table",
-            R.drawable.table1,
+            imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/table1.png",
             price = randomPrice(50, 80),
             description = randomDescription("Table"),
             type = "table",
@@ -66,7 +65,7 @@ fun getRecommended(): List<FurnitureModel> {
 fun getChairs() = listOf(
     FurnitureModel(
         "Modern Chair",
-        R.drawable.chair_grey,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/chair_grey.png",
         price = randomPrice(100, 200),
         description = randomDescription("Modern Chair"),
         link = "https://raw.githubusercontent.com/Sachinbhola/App-Templates/master/Resources/chair/arm_chair__furniture/scene.gltf",
@@ -74,7 +73,7 @@ fun getChairs() = listOf(
     ),
     FurnitureModel(
         "Manchester Chair",
-        R.drawable.chair_old,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/chair_old.png",
         price = randomPrice(100, 200),
         description = randomDescription("Manchester Chair"),
         link = "https://raw.githubusercontent.com/Sachinbhola/App-Templates/master/Resources/the_matrix_red_chesterfield_chair/scene.gltf",
@@ -82,7 +81,7 @@ fun getChairs() = listOf(
     ),
     FurnitureModel(
         "Orange Sheen Chair",
-        R.drawable.chair_orange,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/chair_orange.png",
         price = randomPrice(100, 200),
         description = randomDescription("Orange Sheen Chair"),
         link = "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/SheenChair/glTF/SheenChair.gltf",
@@ -90,7 +89,7 @@ fun getChairs() = listOf(
     ),
     FurnitureModel(
         "Classic Chair",
-        R.drawable.chair_wood,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/chair_wood.png",
         price = randomPrice(100, 200),
         description = randomDescription("Classic Chair"),
         link = "https://raw.githubusercontent.com/Sachinbhola/App-Templates/master/Resources/chair/furniture_for_real-time_visualization_engine/scene.gltf",
@@ -101,7 +100,7 @@ fun getChairs() = listOf(
 fun getSofas() = listOf(
     FurnitureModel(
         "Velvet Sofa",
-        R.drawable.sofa1,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/sofa1.png",
         price = randomPrice(400, 1000),
         description = randomDescription("Velvet Sofa"),
         type = "sofa",
@@ -109,7 +108,7 @@ fun getSofas() = listOf(
     ),
     FurnitureModel(
         "Leather Sofa",
-        R.drawable.sofa2,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/sofa2.png",
         price = randomPrice(400, 1000),
         description = randomDescription("Leather Sofa"),
         type = "sofa",
@@ -117,7 +116,7 @@ fun getSofas() = listOf(
     ),
     FurnitureModel(
         "Victorian Sofa",
-        R.drawable.sofa3,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/sofa3.png",
         price = randomPrice(400, 1000),
         description = randomDescription("Victorian Sofa"),
         type = "sofa",
@@ -125,7 +124,7 @@ fun getSofas() = listOf(
     ),
     FurnitureModel(
         "Chesterfield Sofa",
-        R.drawable.sofa5,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/sofa5.png",
         price = randomPrice(400, 1000),
         description = randomDescription("Chesterfield Sofa"),
         type = "sofa",
@@ -133,7 +132,7 @@ fun getSofas() = listOf(
     ),
     FurnitureModel(
         "Modern Sofa",
-        R.drawable.sofa6,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/sofa6.png",
         price = randomPrice(400, 1000),
         description = randomDescription("Modern Sofa"),
         type = "sofa",
@@ -141,7 +140,7 @@ fun getSofas() = listOf(
     ),
     FurnitureModel(
         "Lawson Sofa",
-        R.drawable.sofa8,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/sofa8.png",
         price = randomPrice(400, 1000),
         description = randomDescription("Lawson Sofa"),
         type = "sofa",
@@ -160,7 +159,7 @@ fun randomPrice(lowerPrice: Int, upperPrice: Int): Int {
 fun getHomeDecors() = listOf(
     FurnitureModel(
         "Modern Pot",
-        R.drawable.dec1,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/dec1.png",
         price = randomPrice(20, 50),
         description = randomDescription("Modern Pot"),
         type = "home decoration",
@@ -168,7 +167,7 @@ fun getHomeDecors() = listOf(
     ),
     FurnitureModel(
         "Lamp",
-        R.drawable.dec2,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/dec2.png",
         price = randomPrice(20, 50),
         description = randomDescription("Lamp"),
         type = "home decoration",
@@ -176,7 +175,7 @@ fun getHomeDecors() = listOf(
     ),
     FurnitureModel(
         "Flowers",
-        R.drawable.dec3,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/dec3.png",
         price = randomPrice(20, 50),
         description = randomDescription("Flowers"),
         type = "home decoration",
@@ -187,7 +186,7 @@ fun getHomeDecors() = listOf(
 fun getOfficeFurnitures() = listOf(
     FurnitureModel(
         "Gaming Chair",
-        R.drawable.office,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/office.png",
         price = randomPrice(50, 80),
         description = randomDescription("Gaming Chair"),
         type = "office",
@@ -195,7 +194,7 @@ fun getOfficeFurnitures() = listOf(
     ),
     FurnitureModel(
         "Classic chair ",
-        R.drawable.office_chair,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/office_chair.png",
         price = randomPrice(50, 80),
         description = randomDescription("Classic chair "),
         type = "office",
@@ -203,7 +202,7 @@ fun getOfficeFurnitures() = listOf(
     ),
     FurnitureModel(
         "Desk",
-        R.drawable.office_desk,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/office_desk.png",
         price = randomPrice(50, 80),
         description = randomDescription("Desk"),
         type = "office",
@@ -214,7 +213,7 @@ fun getOfficeFurnitures() = listOf(
 fun getTables() = listOf(
     FurnitureModel(
         "Table",
-        R.drawable.table1,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/table1.png",
         price = randomPrice(50, 80),
         description = randomDescription("Table"),
         type = "table",
@@ -222,7 +221,7 @@ fun getTables() = listOf(
     ),
     FurnitureModel(
         "Wooden Table",
-        R.drawable.table2,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/table2.png",
         price = randomPrice(50, 80),
         description = randomDescription("Wooden Table"),
         type = "table",
@@ -230,7 +229,7 @@ fun getTables() = listOf(
     ),
     FurnitureModel(
         "Metal Table",
-        R.drawable.table3,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/table3.png",
         price = randomPrice(50, 80),
         description = randomDescription("Metal Table"),
         type = "table",
@@ -238,7 +237,7 @@ fun getTables() = listOf(
     ),
     FurnitureModel(
         "Classic Table",
-        R.drawable.table4,
+        imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/table4.png",
         price = randomPrice(50, 80),
         description = randomDescription("Classic Table"),
         type = "table",

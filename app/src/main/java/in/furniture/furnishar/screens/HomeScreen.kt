@@ -42,6 +42,7 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.layoutId
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import `in`.furniture.furnishar.R
 import `in`.furniture.furnishar.SharedViewModel
 import `in`.furniture.furnishar.models.FurnitureModel
@@ -104,14 +105,14 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
                     ) {
                         if (it == 1) {
                             itemsIndexed(viewModel.sections[it].second) { idx, category ->
-                                CategoryItem(index = idx, category = category)
+                                CategoryItem(index = idx, furnitureModel = category)
                             }
 
                             return@LazyRow
                         }
 
                         itemsIndexed(viewModel.sections[it].second) { _, category ->
-                            FurnitureItem(category = category) {
+                            FurnitureItem(furnitureModel = category) {
                                 viewModel.data = category
                                 navController.navigate("detail")
                             }
@@ -128,7 +129,7 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
 
 @Composable
 fun FurnitureItem(
-    category: FurnitureModel,
+    furnitureModel: FurnitureModel,
     onClick: () -> Unit
 ) {
     Column(
@@ -139,14 +140,14 @@ fun FurnitureItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = category.drawable),
+            painter = rememberAsyncImagePainter(model = furnitureModel.imageUrl),
             contentDescription = null,
             modifier = Modifier
                 .size(145.dp)
                 .padding(8.dp)
         )
         Text(
-            text = category.name ?: "null",
+            text = furnitureModel.name ?: "",
             style = `in`.furniture.furnishar.ui.theme.Typography.h1,
             fontSize = 16.sp,
             textAlign = TextAlign.Center,
@@ -155,7 +156,7 @@ fun FurnitureItem(
             modifier = Modifier.padding(horizontal = 8.dp)
         )
         Text(
-            text = "₹${category.price}",
+            text = "₹${furnitureModel.price}",
             style = `in`.furniture.furnishar.ui.theme.Typography.h1,
             fontSize = 12.sp,
             color = Color(0xFF171717).copy(alpha = 0.4f),
@@ -166,10 +167,10 @@ fun FurnitureItem(
 }
 
 @Composable
-fun CategoryItem(category: FurnitureModel, index: Int) {
+fun CategoryItem(furnitureModel: FurnitureModel, index: Int) {
     val padding: Dp = when {
-        category.name.equals("home decor") -> 40.dp
-        category.name.equals("office") -> 48.dp
+        furnitureModel.name.equals("home decor") -> 40.dp
+        furnitureModel.name.equals("office") -> 48.dp
         else -> 32.dp
     }
 
@@ -188,7 +189,7 @@ fun CategoryItem(category: FurnitureModel, index: Int) {
         )
 
         Image(
-            painter = painterResource(id = category.drawable),
+            painter = rememberAsyncImagePainter(model = furnitureModel.imageUrl),
             contentDescription = null,
             modifier = Modifier
                 .layoutId("ic_img")
@@ -198,7 +199,7 @@ fun CategoryItem(category: FurnitureModel, index: Int) {
         )
 
         Text(
-            text = category.name.toString(),
+            text = furnitureModel.name.toString(),
             style = `in`.furniture.furnishar.ui.theme.Typography.h1,
             fontSize = 16.sp,
             textAlign = TextAlign.Center,

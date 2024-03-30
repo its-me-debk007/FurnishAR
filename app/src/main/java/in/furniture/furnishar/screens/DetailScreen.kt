@@ -2,10 +2,10 @@ package `in`.furniture.furnishar.screens
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,12 +22,12 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -39,6 +39,10 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.layoutId
 import androidx.palette.graphics.Palette
+import coil.ImageLoader
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import `in`.furniture.furnishar.SharedViewModel
 import `in`.furniture.furnishar.ui.theme.Typography
 import `in`.furniture.furnishar.ui.theme.WarningBackgroundColor
@@ -47,6 +51,35 @@ import okhttp3.internal.toHexString
 @Composable
 fun DetailScreen(viewModel: SharedViewModel) {
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        val loader = ImageLoader(context)
+        val request = ImageRequest.Builder(context)
+            .data(viewModel.data.imageUrl)
+            .allowHardware(false)
+            .build()
+        val result = loader.execute(request)
+
+        val bitmap: Bitmap? = if (result is SuccessResult) {
+            (result.drawable as BitmapDrawable).bitmap
+        } else null
+
+        bitmap?.let {
+            Palette.from(it).generate { palette ->
+                kotlin.runCatching {
+                    val hexColor = palette?.vibrantSwatch?.rgb?.toHexString()
+                    hexColor?.let {
+                        viewModel.btnColor = getColor(hexColor)
+                    }
+                }.getOrElse {
+                    val hexColor = palette?.darkMutedSwatch?.rgb?.toHexString()
+                    hexColor?.let {
+                        viewModel.btnColor = getColor(hexColor)
+                    }
+                }
+            }
+        }
+    }
 
     ConstraintLayout(
         modifier = Modifier
@@ -83,8 +116,8 @@ fun DetailScreen(viewModel: SharedViewModel) {
             color = Color.Black,
             modifier = Modifier.layoutId("tvPrice")
         )
-        Image(
-            painter = painterResource(id = viewModel.data.drawable),
+        AsyncImage(
+            model = viewModel.data.imageUrl,
             contentDescription = "",
             modifier = Modifier
                 .height(240.dp)
@@ -115,23 +148,6 @@ fun DetailScreen(viewModel: SharedViewModel) {
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            val bitmap = BitmapFactory.decodeResource(context.resources, viewModel.data.drawable)
-
-            Palette.from(bitmap).generate { palette ->
-                kotlin.runCatching {
-                    val hexColor = palette?.vibrantSwatch?.rgb?.toHexString()
-                    hexColor?.let {
-                        viewModel.btnColor = getColor(hexColor)
-                    }
-                }.getOrElse {
-                    val hexColor = palette?.darkMutedSwatch?.rgb?.toHexString()
-                    hexColor?.let {
-                        viewModel.btnColor = getColor(hexColor)
-                    }
-                }
-
-            }
 
             Text(
                 text = "Ensure a well-lit environment and a large surface to render the AR Model!",
