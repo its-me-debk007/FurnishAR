@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.furniture.furnishar.models.FurnitureModel
 import `in`.furniture.furnishar.ui.theme.ColorPrimary
-import `in`.furniture.furnishar.utils.getCategories
 import `in`.furniture.furnishar.utils.getChairs
 import `in`.furniture.furnishar.utils.getHomeDecors
 import `in`.furniture.furnishar.utils.getOfficeFurnitures
@@ -27,7 +26,6 @@ class SharedViewModel @Inject constructor() : ViewModel() {
 
     var sections = listOf(
         "Recommended for you..." to getRecommended().shuffled(),
-        "Browse by Categories" to getCategories().shuffled(),
         "Chairs" to getChairs().shuffled(),
         "Sofas" to getSofas().shuffled(),
         "Home decors" to getHomeDecors().shuffled(),
