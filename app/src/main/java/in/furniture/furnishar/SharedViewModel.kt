@@ -1,8 +1,11 @@
 package `in`.furniture.furnishar
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.furniture.furnishar.models.FurnitureModel
@@ -21,8 +24,11 @@ class SharedViewModel @Inject constructor() : ViewModel() {
     var data = FurnitureModel()
 
     var isARCoreDisabled by mutableStateOf(false)
-
     var btnColor by mutableStateOf(ColorPrimary)
+    var msisdn by mutableStateOf("+919118882517")
+    val focusRequesters = List(4) { FocusRequester() }
+    val otpValues =
+        mutableStateListOf(TextFieldValue(), TextFieldValue(), TextFieldValue(), TextFieldValue())
 
     var sections = listOf(
         "Recommended for you..." to getRecommended().shuffled(),

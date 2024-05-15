@@ -4,8 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Surface
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -14,11 +19,13 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import `in`.furniture.furnishar.screens.DetailScreen
 import `in`.furniture.furnishar.screens.HomeScreen
+import `in`.furniture.furnishar.screens.LoginBottomSheet
 import `in`.furniture.furnishar.screens.SplashScreen
 import `in`.furniture.furnishar.ui.theme.FurnishARTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -29,13 +36,25 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     val viewModel = hiltViewModel<SharedViewModel>()
-                    NavHost(navController = navController, startDestination = "splash") {
-                        composable("home") { HomeScreen(navController, viewModel) }
-                        composable("detail") {
-                            DetailScreen(viewModel)
+                    val sheetState = rememberModalBottomSheetState(
+                        initialValue = ModalBottomSheetValue.Expanded
+                    )
+                    val scope = rememberCoroutineScope()
+
+                    ModalBottomSheetLayout(
+                        sheetState = sheetState,
+                        sheetContent = {
+                            LoginBottomSheet(navController = navController, viewModel = viewModel)
                         }
-                        composable("splash") {
-                            SplashScreen(navController = navController)
+                    ) {
+                        NavHost(navController = navController, startDestination = "splash") {
+                            composable("home") { HomeScreen(navController, viewModel) }
+                            composable("detail") {
+                                DetailScreen(viewModel)
+                            }
+                            composable("splash") {
+                                SplashScreen(navController = navController)
+                            }
                         }
                     }
                 }
