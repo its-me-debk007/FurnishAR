@@ -1,7 +1,6 @@
 package `in`.furniture.furnishar
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +10,7 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Surface
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,18 +22,22 @@ import com.razorpay.ExternalWalletListener
 import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
 import dagger.hilt.android.AndroidEntryPoint
+import `in`.furniture.furnishar.components.SuccessFailureDialog
 import `in`.furniture.furnishar.screens.DetailScreen
 import `in`.furniture.furnishar.screens.HomeScreen
 import `in`.furniture.furnishar.screens.LoginBottomSheet
 import `in`.furniture.furnishar.screens.SplashScreen
 import `in`.furniture.furnishar.ui.theme.FurnishARTheme
-import org.json.JSONObject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(), PaymentResultWithDataListener, ExternalWalletListener {
 
     private lateinit var checkout: Checkout
+    private lateinit var onPaymentSuccessCallback: (() -> Unit)
+    private lateinit var onPaymentErrorCallback: ((String) -> Unit)
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,28 +47,13 @@ class MainActivity : ComponentActivity(), PaymentResultWithDataListener, Externa
         checkout = Checkout()
         checkout.setKeyID(BuildConfig.RAZORPAY_KEY)
 
-        val options = JSONObject()
-        options.apply {
-            put("name", "Razorpay Corp")
-            put("description", "Demoing Charges")
-            put("image", "https://firebasestorage.googleapis.com/v0/b/furnishar-ar.appspot.com/o/ic_launcher-playstore.jpg?alt=media&token=12decb7f-02d8-4fb1-aec1-1951fc61d6ec")
-            put("theme.color", "#8A49F7")
-            put("currency", "INR")
-            put("amount", "20000")
-        }
+        val razorpayOptions = JSONObject()
 
         val retryObj = JSONObject()
         retryObj.put("enabled", true)
         retryObj.put("max_count", 4)
 
-        options.put("retry", retryObj)
-
-        val prefill = JSONObject()
-        prefill.put("contact", "9118882517")
-
-        options.put("prefill", prefill)
-
-        checkout.open(this, options)
+        razorpayOptions.put("retry", retryObj)
 
         setContent {
             FurnishARTheme {
@@ -79,6 +68,40 @@ class MainActivity : ComponentActivity(), PaymentResultWithDataListener, Externa
                     )
                     val scope = rememberCoroutineScope()
 
+                    LaunchedEffect(Unit) {
+                        onPaymentSuccessCallback = {
+                            viewModel.showPaymentSuccessDialog = true
+                            scope.launch {
+                                delay(3000L)
+                                viewModel.showPaymentSuccessDialog = false
+                            }
+                        }
+
+                        onPaymentErrorCallback = { errorMsg ->
+                            viewModel.paymentFailureDialogMsg = errorMsg
+                            scope.launch {
+                                delay(3000L)
+                                viewModel.paymentFailureDialogMsg = null
+                            }
+                        }
+                    }
+
+                    if (viewModel.showPaymentSuccessDialog) {
+                        SuccessFailureDialog(
+                            isSuccess = true,
+                            heading = "Hooray! Payment Successful",
+                            description = "Thank u for shopping with FurnishAR :)",
+                        )
+                    }
+
+                    viewModel.paymentFailureDialogMsg?.let {
+                        SuccessFailureDialog(
+                            isSuccess = false,
+                            heading = "Payment Failed",
+                            description = it,
+                        )
+                    }
+
                     ModalBottomSheetLayout(
                         sheetState = sheetState,
                         sheetContent = {
@@ -91,9 +114,31 @@ class MainActivity : ComponentActivity(), PaymentResultWithDataListener, Externa
                         NavHost(navController = navController, startDestination = "splash") {
                             composable("home") { HomeScreen(navController, viewModel) }
                             composable("detail") {
-                                DetailScreen(viewModel = viewModel, onShowLoginSheet = {
-                                    scope.launch { sheetState.show() }
-                                })
+                                DetailScreen(
+                                    viewModel = viewModel,
+                                    onShowLoginSheet = {
+                                        scope.launch { sheetState.show() }
+                                    },
+                                    onBuy = { msisdn: String, furnitureName: String, price: Int ->
+                                        val prefill = JSONObject()
+                                        prefill.put("contact", msisdn)
+                                        razorpayOptions.put("prefill", prefill)
+
+                                        razorpayOptions.apply {
+                                            put("name", "FurnishAR")
+                                            put("description", "Payment for buying $furnitureName")
+                                            put(
+                                                "image",
+                                                "https://firebasestorage.googleapis.com/v0/b/furnishar-ar.appspot.com/o/ic_launcher-playstore.jpg?alt=media&token=12decb7f-02d8-4fb1-aec1-1951fc61d6ec"
+                                            )
+                                            put("theme.color", "#8A49F7")
+                                            put("currency", "INR")
+                                            put("amount", price * 100)
+                                        }
+
+                                        checkout.open(this@MainActivity, razorpayOptions)
+                                    }
+                                )
                             }
                             composable("splash") {
                                 SplashScreen(navController = navController)
@@ -106,14 +151,12 @@ class MainActivity : ComponentActivity(), PaymentResultWithDataListener, Externa
     }
 
     override fun onPaymentSuccess(razorpayPaymentId: String?, paymentData: PaymentData?) {
-        Toast.makeText(this, "Thanks for shopping with FurnishAR", Toast.LENGTH_SHORT).show()
+        onPaymentSuccessCallback()
     }
 
     override fun onPaymentError(p0: Int, p1: String?, p2: PaymentData?) {
-        Toast.makeText(this, p0.toString(), Toast.LENGTH_SHORT).show()
+        onPaymentErrorCallback("Please try again to buy the furniture")
     }
 
-    override fun onExternalWalletSelected(p0: String?, p1: PaymentData?) {
-        Toast.makeText(this, p0, Toast.LENGTH_SHORT).show()
-    }
+    override fun onExternalWalletSelected(p0: String?, p1: PaymentData?) {}
 }

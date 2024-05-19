@@ -43,7 +43,11 @@ import `in`.furniture.furnishar.ui.theme.Typography
 import `in`.furniture.furnishar.ui.theme.WarningBackgroundColor
 
 @Composable
-fun DetailScreen(viewModel: SharedViewModel, onShowLoginSheet: () -> Unit) {
+fun DetailScreen(
+    viewModel: SharedViewModel,
+    onShowLoginSheet: () -> Unit,
+    onBuy: (String, String, Int) -> Unit
+) {
     val context = LocalContext.current
 
     Column(
@@ -173,8 +177,14 @@ fun DetailScreen(viewModel: SharedViewModel, onShowLoginSheet: () -> Unit) {
                     onClick = {
                         if (!viewModel.isLoggedIn) {
                             onShowLoginSheet()
-//                        viewModel.isLoggedIn = true
+                            return@Button
                         }
+
+                        onBuy(
+                            viewModel.msisdn,
+                            viewModel.data.name.toString(),
+                            viewModel.data.price!!
+                        )
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = viewModel.btnColor),
                     elevation = ButtonDefaults.elevation(0.dp),

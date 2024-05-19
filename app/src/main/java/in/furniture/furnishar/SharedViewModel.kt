@@ -26,8 +26,11 @@ class SharedViewModel @Inject constructor() : ViewModel() {
     var otp by mutableStateOf("")
 
     var isLoginSheetLoading by mutableStateOf(false)
-    var isLoggedIn by mutableStateOf(false)
+    var isLoggedIn by mutableStateOf(true)
     var loginErrorMsg: String? by mutableStateOf(null)
+
+    var showPaymentSuccessDialog by mutableStateOf(false)
+    var paymentFailureDialogMsg: String? by mutableStateOf(null)
 
     var data = FurnitureModel()
 
