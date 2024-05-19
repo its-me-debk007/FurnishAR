@@ -18,11 +18,18 @@ import javax.inject.Inject
 @HiltViewModel
 class SharedViewModel @Inject constructor() : ViewModel() {
 
-    var data = FurnitureModel()
-
+    var verificationId: String? by mutableStateOf(null)
     var isARCoreDisabled by mutableStateOf(false)
-
     var btnColor by mutableStateOf(ColorPrimary)
+
+    var msisdn by mutableStateOf("9118882517")
+    var otp by mutableStateOf("")
+
+    var isLoginSheetLoading by mutableStateOf(false)
+    var isLoggedIn by mutableStateOf(false)
+    var loginErrorMsg: String? by mutableStateOf(null)
+
+    var data = FurnitureModel()
 
     var sections = listOf(
         "Recommended for you..." to getRecommended().shuffled(),
