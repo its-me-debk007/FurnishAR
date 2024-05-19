@@ -42,4 +42,19 @@ class SharedViewModel @Inject constructor() : ViewModel() {
         "Office furniture" to getOfficeFurnitures().shuffled(),
         "Tables" to getTables().shuffled()
     )
+
+    val transactionList = listOf(
+        TransactionInfo(amount = 53563, date = "20 Mar"),
+        TransactionInfo(amount = 4693, date = "08 Mar"),
+        TransactionInfo(amount = 100003, date = "30 Apr", error = "Insufficient Balance"),
+        TransactionInfo(amount = 9900, date = "28 Apr"),
+        TransactionInfo(amount = 2583, date = "10 Mar"),
+        TransactionInfo(amount = 7903, date = "02 Apr", error = "Incorrect Card Details"),
+    )
 }
+
+data class TransactionInfo(
+    val amount: Int,
+    val date: String,
+    val error: String? = null
+)

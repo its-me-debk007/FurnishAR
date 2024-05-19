@@ -26,6 +26,7 @@ import `in`.furniture.furnishar.components.SuccessFailureDialog
 import `in`.furniture.furnishar.screens.DetailScreen
 import `in`.furniture.furnishar.screens.HomeScreen
 import `in`.furniture.furnishar.screens.LoginBottomSheet
+import `in`.furniture.furnishar.screens.PaymentHistoryScreen
 import `in`.furniture.furnishar.screens.SplashScreen
 import `in`.furniture.furnishar.ui.theme.FurnishARTheme
 import kotlinx.coroutines.delay
@@ -121,11 +122,12 @@ class MainActivity : ComponentActivity(), PaymentResultWithDataListener, Externa
                                     },
                                     onBuy = { msisdn: String, furnitureName: String, price: Int ->
                                         val prefill = JSONObject()
+                                        prefill.put("email", "furnish.ar@gmail.com")
                                         prefill.put("contact", msisdn)
                                         razorpayOptions.put("prefill", prefill)
 
                                         razorpayOptions.apply {
-                                            put("name", "FurnishAR")
+                                            put("name", "+91 ${viewModel.msisdn}")
                                             put("description", "Payment for buying $furnitureName")
                                             put(
                                                 "image",
@@ -138,6 +140,12 @@ class MainActivity : ComponentActivity(), PaymentResultWithDataListener, Externa
 
                                         checkout.open(this@MainActivity, razorpayOptions)
                                     }
+                                )
+                            }
+                            composable("payment-history") {
+                                PaymentHistoryScreen(
+                                    navController = navController,
+                                    viewModel = viewModel,
                                 )
                             }
                             composable("splash") {

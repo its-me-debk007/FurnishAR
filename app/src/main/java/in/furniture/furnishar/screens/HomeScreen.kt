@@ -1,6 +1,7 @@
 package `in`.furniture.furnishar.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -33,8 +36,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintSet
-import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import `in`.furniture.furnishar.R
@@ -69,6 +70,24 @@ fun HomeScreen(navController: NavHostController, viewModel: SharedViewModel) {
                             .padding(start = 16.dp)
                             .size(32.dp)
                     )
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            navController.navigate("payment-history")
+                        }
+                    ) {
+                        Icon(
+                            painterResource(id = R.drawable.ic_receipt),
+                            contentDescription = null,
+                            tint = Color.Black,
+                            modifier = Modifier
+                                .padding(end = 12.dp)
+                                .border(width = 1.dp, color = Color.Black, shape = CircleShape)
+                                .padding(8.dp)
+                                .size(24.dp)
+                        )
+                    }
                 },
                 elevation = 0.dp,
                 modifier = Modifier.padding(top = 40.dp, bottom = 8.dp)
@@ -155,41 +174,6 @@ fun FurnitureItem(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(vertical = 12.dp)
             )
-        }
-    }
-}
-
-fun constraints(): ConstraintSet {
-    return ConstraintSet {
-        val ivBack = createRefFor("ic_back")
-        val ivImg = createRefFor("ic_img")
-        val tvName = createRefFor("tv_name")
-        val tvSize = createRefFor("tv_size")
-
-        constrain(ivBack) {
-            top.linkTo(parent.top)
-            bottom.linkTo(parent.bottom)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        }
-        constrain(ivImg) {
-            top.linkTo(parent.top)
-            bottom.linkTo(parent.bottom, 64.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            width = Dimension.fillToConstraints
-        }
-        constrain(tvName) {
-            bottom.linkTo(parent.bottom, 40.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            width = Dimension.fillToConstraints
-        }
-        constrain(tvSize) {
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            width = Dimension.fillToConstraints
-            top.linkTo(tvName.bottom, 4.dp)
         }
     }
 }
