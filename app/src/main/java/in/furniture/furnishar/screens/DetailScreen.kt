@@ -34,23 +34,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import androidx.constraintlayout.compose.layoutId
 import coil.compose.AsyncImage
 import `in`.furniture.furnishar.SharedViewModel
 import `in`.furniture.furnishar.ui.theme.Typography
 import `in`.furniture.furnishar.ui.theme.WarningBackgroundColor
 
 @Composable
-fun DetailScreen(viewModel: SharedViewModel) {
+fun DetailScreen(viewModel: SharedViewModel, onShowLoginSheet: () -> Unit) {
     val context = LocalContext.current
 
-    ConstraintLayout(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
             .background(
                 brush = Brush.verticalGradient(
                     listOf(
@@ -58,8 +55,9 @@ fun DetailScreen(viewModel: SharedViewModel) {
                         Color.Transparent
                     )
                 )
-            ),
-        constraintSet = constraintsDetail()
+            )
+            .padding(start = 24.dp, end = 24.dp)
+            .verticalScroll(rememberScrollState()),
     ) {
         Text(
             text = viewModel.data.type.toString(),
@@ -67,28 +65,25 @@ fun DetailScreen(viewModel: SharedViewModel) {
             fontStyle = FontStyle.Italic,
             fontSize = 18.sp,
             color = Color(0XFF171717).copy(alpha = 0.4f),
-            modifier = Modifier.layoutId("tvType")
+            modifier = Modifier.padding(top = 52.dp)
         )
         Text(
             text = viewModel.data.name.toString(),
             style = Typography.h1,
             fontSize = 30.sp,
             color = Color.Black,
-            modifier = Modifier.layoutId("tvName")
         )
         Text(
             text = "from",
             style = Typography.body1,
             fontSize = 18.sp,
             color = Color(0XFF171717).copy(alpha = 0.4f),
-            modifier = Modifier.layoutId("tvFrom")
         )
         Text(
             text = "₹ ${viewModel.data.price.toString()}",
             style = Typography.h1,
             fontSize = 22.sp,
             color = Color.Black,
-            modifier = Modifier.layoutId("tvPrice")
         )
         AsyncImage(
             model = viewModel.data.imageUrl,
@@ -96,14 +91,12 @@ fun DetailScreen(viewModel: SharedViewModel) {
             modifier = Modifier
                 .height(240.dp)
                 .zIndex(1.1f)
-                .layoutId("ivImg")
         )
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
                 .background(Color.White)
-                .layoutId("clDetail")
-                .padding(24.dp, 160.dp, 24.dp, 24.dp)
+                .padding(top = 32.dp, bottom = 24.dp, start = 4.dp, end = 4.dp)
         ) {
             Text(
                 text = "Description",
@@ -162,6 +155,28 @@ fun DetailScreen(viewModel: SharedViewModel) {
             ) {
                 Text(
                     text = "View in your House!",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                    letterSpacing = 0.7.sp,
+                    color = Color.White
+                )
+            }
+
+            Button(
+                onClick = {
+                    if (!viewModel.isLoggedIn) {
+                        onShowLoginSheet()
+//                        viewModel.isLoggedIn = true
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = viewModel.btnColor),
+                elevation = ButtonDefaults.elevation(0.dp),
+                shape = CircleShape,
+                contentPadding = PaddingValues(vertical = 12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Buy Now",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     letterSpacing = 0.7.sp,

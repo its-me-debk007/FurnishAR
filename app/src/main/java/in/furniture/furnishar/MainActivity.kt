@@ -22,12 +22,14 @@ import `in`.furniture.furnishar.screens.HomeScreen
 import `in`.furniture.furnishar.screens.LoginBottomSheet
 import `in`.furniture.furnishar.screens.SplashScreen
 import `in`.furniture.furnishar.ui.theme.FurnishARTheme
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             FurnishARTheme {
                 Surface(
@@ -37,20 +39,25 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val viewModel = hiltViewModel<SharedViewModel>()
                     val sheetState = rememberModalBottomSheetState(
-                        initialValue = ModalBottomSheetValue.Expanded
+                        initialValue = ModalBottomSheetValue.Hidden
                     )
                     val scope = rememberCoroutineScope()
 
                     ModalBottomSheetLayout(
                         sheetState = sheetState,
                         sheetContent = {
-                            LoginBottomSheet(navController = navController, viewModel = viewModel)
+                            LoginBottomSheet(
+                                sheetState = sheetState,
+                                viewModel = viewModel,
+                            )
                         }
                     ) {
                         NavHost(navController = navController, startDestination = "splash") {
                             composable("home") { HomeScreen(navController, viewModel) }
                             composable("detail") {
-                                DetailScreen(viewModel)
+                                DetailScreen(viewModel = viewModel, onShowLoginSheet = {
+                                    scope.launch { sheetState.show() }
+                                })
                             }
                             composable("splash") {
                                 SplashScreen(navController = navController)
