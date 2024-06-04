@@ -49,7 +49,7 @@ fun PaymentHistoryScreen(
                     style = Typography.h1,
                     fontSize = 30.sp,
                     color = Color.Black,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 32.dp)
                 )
             }
         }

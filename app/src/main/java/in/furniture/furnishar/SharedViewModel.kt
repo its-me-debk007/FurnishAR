@@ -18,6 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SharedViewModel @Inject constructor() : ViewModel() {
 
+    var isLoggedIn = false
+
     var verificationId: String? by mutableStateOf(null)
     var isARCoreDisabled by mutableStateOf(false)
     var btnColor by mutableStateOf(ColorPrimary)
@@ -26,7 +28,6 @@ class SharedViewModel @Inject constructor() : ViewModel() {
     var otp by mutableStateOf("")
 
     var isLoginSheetLoading by mutableStateOf(false)
-    var isLoggedIn by mutableStateOf(true)
     var loginErrorMsg: String? by mutableStateOf(null)
 
     var showPaymentSuccessDialog by mutableStateOf(false)

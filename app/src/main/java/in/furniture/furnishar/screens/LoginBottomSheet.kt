@@ -204,6 +204,7 @@ fun LoginBottomSheet(
                     onSuccess = {
                         Log.d("furnu", "success")
                         viewModel.isLoginSheetLoading = false
+                        viewModel.isLoggedIn = true
                         scope.launch { sheetState.hide() }
                     },
                     onError = { errorMsg ->
