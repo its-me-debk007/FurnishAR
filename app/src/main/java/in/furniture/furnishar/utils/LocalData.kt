@@ -49,7 +49,7 @@ fun getChairs() = listOf(
     FurnitureModel(
         "Modern Chair",
         imageUrl = "https://raw.githubusercontent.com/its-me-debk007/FurnishAR/furniture-models/images/chair_grey.png",
-        price = generatePrice(900, 2500),
+        price = 973,
         description = generateDescription("Modern Chair"),
         link = "https://raw.githubusercontent.com/Sachinbhola/App-Templates/master/Resources/chair/arm_chair__furniture/scene.gltf",
         type = "chair"

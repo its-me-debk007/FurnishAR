@@ -45,6 +45,7 @@ class SharedViewModel @Inject constructor() : ViewModel() {
     )
 
     val transactionList = listOf(
+        TransactionInfo(amount = 973, date = "05 Jun"),
         TransactionInfo(amount = 53563, date = "20 Mar"),
         TransactionInfo(amount = 4693, date = "08 Mar"),
         TransactionInfo(amount = 100003, date = "30 Apr", error = "Insufficient Balance"),
