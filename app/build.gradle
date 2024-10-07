@@ -88,5 +88,5 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation ("com.google.firebase:firebase-auth")
     // Razorpay
-    implementation ("com.razorpay:checkout:1.6.38")
+    implementation ("com.razorpay:checkout:1.6.41")
 }
