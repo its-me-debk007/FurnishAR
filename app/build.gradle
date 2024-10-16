@@ -1,21 +1,21 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'com.google.devtools.ksp'
-    id 'com.google.dagger.hilt.android'
-    id 'kotlin-parcelize'
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
+    id("kotlin-parcelize")
     id("com.google.gms.google-services")
 }
 
 android {
-    compileSdk 34
+    compileSdk = 34
 
     defaultConfig {
-        applicationId "in.furniture.furnishar"
-        minSdk 23
-        targetSdk 33
-        versionCode 13
-        versionName "1.0.1"
+        applicationId = "in.furniture.furnishar"
+        minSdk = 23
+        targetSdk = 33
+        versionCode = 13
+        versionName = "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -38,18 +38,18 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
     }
     buildFeatures {
-        compose true
-        buildConfig true
+        compose = true
+        buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.5.13"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
     packagingOptions {
         resources {
