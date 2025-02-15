@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        compose_version = '1.7.7'
+        compose_version = '1.7.8'
         nav_version = "2.8.7"
         live_data_version = "2.6.2"
         retrofitVersion = "2.11.0"
