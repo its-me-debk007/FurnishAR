@@ -3,7 +3,7 @@ buildscript {
         compose_version = '1.8.1'
         nav_version = "2.9.0"
         live_data_version = "2.6.2"
-        retrofitVersion = "2.11.0"
+        retrofitVersion = "2.12.0"
         okHttpVersion = "4.9.1"
         dagger_version = "2.56.2"
         coil_version = "2.7.0"
