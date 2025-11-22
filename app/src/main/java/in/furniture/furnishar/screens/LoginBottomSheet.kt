@@ -41,19 +41,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
-import `in`.furniture.furnishar.MainActivity
 import `in`.furniture.furnishar.SharedViewModel
 import `in`.furniture.furnishar.components.OtpFields
 import `in`.furniture.furnishar.ui.theme.ColorPrimary
 import `in`.furniture.furnishar.ui.theme.Typography
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -234,29 +226,30 @@ fun LoginBottomSheet(
 }
 
 fun sendOtp(context: Context, msisdn: String, onSuccess: (String) -> Unit) {
-
-    val sendOtpCallbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-        override fun onVerificationCompleted(credential: PhoneAuthCredential) {}
-
-        override fun onVerificationFailed(e: FirebaseException) {}
-
-        override fun onCodeSent(
-            verificationId: String,
-            token: PhoneAuthProvider.ForceResendingToken,
-        ) {
-            onSuccess(verificationId)
-        }
-    }
-
-    val options = PhoneAuthOptions.newBuilder()
-        .setPhoneNumber("+91$msisdn")
-        .setTimeout(30L, TimeUnit.SECONDS)
-        .setActivity(context as MainActivity)
-        .setCallbacks(sendOtpCallbacks)
-        .build()
-
-    PhoneAuthProvider.verifyPhoneNumber(options)
+    onSuccess("dummy_value")
+    // TODO: uncomment below for enable proper authentication flow
+//    val sendOtpCallbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+//
+//        override fun onVerificationCompleted(credential: PhoneAuthCredential) {}
+//
+//        override fun onVerificationFailed(e: FirebaseException) {}
+//
+//        override fun onCodeSent(
+//            verificationId: String,
+//            token: PhoneAuthProvider.ForceResendingToken,
+//        ) {
+//            onSuccess(verificationId)
+//        }
+//    }
+//
+//    val options = PhoneAuthOptions.newBuilder()
+//        .setPhoneNumber("+91$msisdn")
+//        .setTimeout(30L, TimeUnit.SECONDS)
+//        .setActivity(context as MainActivity)
+//        .setCallbacks(sendOtpCallbacks)
+//        .build()
+//
+//    PhoneAuthProvider.verifyPhoneNumber(options)
 }
 
 fun verifyOtp(
@@ -266,25 +259,25 @@ fun verifyOtp(
     onSuccess: () -> Unit,
     onError: (String) -> Unit
 ) {
-    Log.d("furnu", otp)
-    val credential = PhoneAuthProvider.getCredential(verificationId, otp)
-
-    FirebaseAuth.getInstance().signInWithCredential(credential)
-        .addOnCompleteListener(context as MainActivity) { task ->
-            if (task.isSuccessful) {
-                onSuccess()
-            } else {
-
-                if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                    Log.d(
-                        "furnu",
-                        (task.exception as FirebaseAuthInvalidCredentialsException).message.toString()
-                    )
-                    onError("Invalid OTP")
-                }
-            }
-        }
-
+    onSuccess()
+    // TODO: uncomment below for enable proper authentication flow, & remove above onSuccess() hardcoding
+//    val credential = PhoneAuthProvider.getCredential(verificationId, otp)
+//
+//    FirebaseAuth.getInstance().signInWithCredential(credential)
+//        .addOnCompleteListener(context as MainActivity) { task ->
+//            if (task.isSuccessful) {
+//                onSuccess()
+//            } else {
+//
+//                if (task.exception is FirebaseAuthInvalidCredentialsException) {
+//                    Log.d(
+//                        "furnu",
+//                        (task.exception as FirebaseAuthInvalidCredentialsException).message.toString()
+//                    )
+//                    onError("Invalid OTP")
+//                }
+//            }
+//        }
 }
 
 

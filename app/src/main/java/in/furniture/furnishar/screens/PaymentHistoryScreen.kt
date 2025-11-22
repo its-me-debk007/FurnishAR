@@ -1,9 +1,10 @@
 package `in`.furniture.furnishar.screens
 
-import TransactionListItem
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -65,6 +66,27 @@ fun PaymentHistoryScreen(
                     errorDescription = viewModel.transactionList[idx].error
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun TransactionListItem(
+    amountWithCurrency: String,
+    date: String,
+    errorDescription: String?,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text("Amount: $amountWithCurrency")
+        Text("Date: $date", modifier = Modifier.padding(top = 4.dp))
+
+        errorDescription?.let {
+            Text("Error: $errorDescription", color = Color.Red, modifier = Modifier.padding(top = 4.dp))
         }
     }
 }
