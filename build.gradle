@@ -8,7 +8,7 @@ buildscript {
         dagger_version = "2.57.2"
         coil_version = "2.7.0"
         constraint_layout = "1.1.1"
-        kotlin = "2.2.21"
+        kotlin = "2.3.0"
     }
 
     dependencies {
